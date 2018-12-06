@@ -131,7 +131,7 @@
     }
 ```
 ### 6、信息流图文
-惜细流图文提供开发者自定义视图布局，将布局中广告title,desc,img,adflag做参数传入
+信息流图文提供开发者自定义视图布局，将布局中广告title,desc,img,adflag做参数传入
 ```java
     RelativeLayout container;
     MDFullApp app;
