@@ -47,23 +47,11 @@
     }
 ```
 ### 3、基本使用方法
-在请求广告前注册app,参数1:context，参数2:存放SpaceId的map，参数3:选择运行环境（测试|线上）
+在请求广告前注册app,参数1:存放SpaceId的map，参数2:选择运行环境（测试|线上）
 ```java
-    MDFullApp.register(context,map,MDFullApp.ENV_RELEASE);//注册
+    MDFullApp.register(map,MDFullApp.ENV_RELEASE);//注册
 ```
-请求广告，参数1:操作码（开发者自己定义），参数2:广告类型常量，参数3:ResponseGetter（回调广告数据）
-```java
-    MDFullApp app;
-    app=MDFullApp.getApp();
-    app.requestAd(opCode, 广告类型, getter);//请求广告
-```
-在获取到广告后，进行显示
-```java
-    MDFullManager manager;
-    manager=MDFullManager.getManager();
-    manager.insertAd_InformationFlow(context, app, ResponseAd, container, opCode,
-                            广告类型, MDFullManager.AdCallback);
-```
+其中参数1的所有类型广告id需要开发者向米赋相关人员申请（目前），然后开发者可以register时传入完整包含id的map，也可以在需要时调用MDFullApp.getApp().setSpaceIds(map);进行动态设置。
 ## 二、广告类型
 ## a、开平广告
 开屏广告由sdk托管，直接intent跳转，可以在主界面还未设置数据时直接跳转。
