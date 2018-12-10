@@ -263,6 +263,11 @@ public class MobileInfomationFlowDemoActivity extends Activity implements MDFull
         app=MDFullApp.getApp();
         app.setAppRecall(this);
         manager=MDFullManager.getManager();
+        boolean autoPlay=false;
+        int networkType=NetworkUtil.getNetWorkType(this);
+        if(networkType==NetworkUtil.WIFI){//当前链接是wifi,可以自动播放
+            autoPlay=true;
+        }
         manager.insertAd_MobileInformationFlow(this, app, container, true, true,
                 new VideoViewPlayer.PlayerGetter() {
                     @Override
@@ -323,4 +328,7 @@ public class MobileInfomationFlowDemoActivity extends Activity implements MDFull
     }
 }
 ```
-视频信息流需要开发者自行处理视频的销毁，避免内存泄漏。在activity暂停或退出时进行销毁，恢复时进行视频恢复。
+视频信息流需要开发者自行处理视频的销毁，避免内存泄漏。在activity暂停或退出时进行销毁，恢复时进行视频恢复。因为视频耗费流量巨大，因此建议链接wifi时才自动播放。
+
+                            @Override
+                            @Override
