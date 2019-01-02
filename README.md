@@ -18,7 +18,9 @@
 ### 2、适配API23以上权限配置
 添加动态权限申请
 ```java
-        PermissionUtil.getUtil().requestPermission(this, new String[]{//申请必要的权限
+        PermissionUtil permissionUtil;
+        permissionUtil=new PermissionUtil();
+        permissionUtil.requestPermission(this, new String[]{//申请必要的权限
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_NETWORK_STATE,
