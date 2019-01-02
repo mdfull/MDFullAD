@@ -45,7 +45,7 @@
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtil.getUtil().onRequestPermissionsResult(110);//注册权限申请回调
+        permissionUtil.onRequestPermissionsResult(110);//注册权限申请回调
     }
 ```
 ### 3、基本使用方法
