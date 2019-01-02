@@ -49,7 +49,7 @@
 ### 3、基本使用方法
 在请求广告前注册app,参数1:存放SpaceId的map，参数2:选择运行环境（测试|线上）
 ```java
-    Map<String,String> map=new HashMap<>();//声明一个map存放广告位id
+    Map<String,SpaceId> map=new HashMap<>();//声明一个map存放广告位id
     //把申请到的广告位id放进去
     map.put(Constant.静态图开屏广告,你申请到的静态图开屏广告位id);
     map.put(Constant.动态图开屏广告,你申请到的动态图开屏广告位id);
