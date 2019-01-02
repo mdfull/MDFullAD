@@ -51,13 +51,13 @@
 ```java
     Map<String,SpaceId> map=new HashMap<>();//声明一个map存放广告位id
     //把申请到的广告位id放进去
-    map.put(Constant.静态图开屏广告,你申请到的静态图开屏广告位id);
-    map.put(Constant.动态图开屏广告,你申请到的动态图开屏广告位id);
-    map.put(Constant.视频开屏广告,你申请到的视频开屏广告位id);
-    map.put(Constant.信息流大图广告,你申请到的信息流大图广告位id);
-    map.put(Constant.信息流三图广告,你申请到的信息流三图广告位id);
-    map.put(Constant.图文信息流广告,你申请到的图文信息流广告位id);
-    map.put(Constant.视频信息流广告,你申请到的视频信息流广告位id);
+    map.put(Constant.静态图开屏广告,new SpaceId(Constant.静态图开屏广告,"你申请到的静态图开屏广告位id"));
+    map.put(Constant.动态图开屏广告,new SpaceId(Constant.动态图开屏广告,"你申请到的动态图开屏广告位id"));
+    map.put(Constant.视频开屏广告,new SpaceId(Constant.视频开屏广告,"你申请到的视频开屏广告位id"));
+    map.put(Constant.信息流大图广告,new SpaceId(Constant.信息流大图广告,"你申请到的信息流大图广告位id"));
+    map.put(Constant.信息流三图广告,new SpaceId(Constant.信息流三图广告,"你申请到的信息流三图广告位id"));
+    map.put(Constant.图文信息流广告,new SpaceId(Constant.图文信息流广告,"你申请到的图文信息流广告位id"));
+    map.put(Constant.视频信息流广告,new SpaceId(Constant.视频信息流广告,"你申请到的视频信息流广告位id"));
     //通过广告位id注册
     MDFullApp.register(context,map);//注册
 ```
