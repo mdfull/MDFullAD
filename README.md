@@ -1,7 +1,28 @@
 # MDFullAD
 米赋广告SDK开发文档
 
-## 一、使用
+## 一、接入
+下载MDFullAD_\*.aar，放入项目的libs文件夹下。
+添加引用。如果是gradle3.0以下版本，在app的build.gradle文件中做如下配置：
+```java
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation(name: 'MDFullAD_*', ext: 'aar')
+}
+```
+其中\*代表sdk的版本号。如果是gradle3.0以上版本，用下面方式配置：
+```java
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+}
+```
+
+## 二、使用
 ### 1、添加权限
 在manifest文件中添加必要权限
 ```java
