@@ -36,6 +36,7 @@ dependencies {
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 ```
+要求安卓api版本最低api19，在app的build.gradle中配置 minSdkVersion 19
 ### 2、适配API23以上权限配置
 添加动态权限申请
 ```java
