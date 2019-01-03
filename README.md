@@ -21,6 +21,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar'])
 }
 ```
+在src目录下创建jniLib目录，将各个平台设备的so文件放入（so文件及完整的结构已经放入下载文件中，具体项目结构可以看demo项目）
 
 ## 二、使用
 ### 1、添加权限
