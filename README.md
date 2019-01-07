@@ -86,10 +86,10 @@ dependencies {
     //通过广告位id注册
     MDFullApp.register(context,map);//注册
 ```
-其中context位上下文对象.
+其中context为上下文对象.
 ## 二、广告类型
 ## a、开屏广告
-开屏广告由sdk托管，直接调用提供的方法跳转，可以在主界面还未设置数据时直接跳转。
+开屏广告由sdk托管，直接调用提供的方法跳转，可以在主界面还未设置数据时直接跳转。开屏广告目前包括：静态图开屏，动态图开屏，视频开屏
 ### 1、静态开屏广告
 ```java
     MDFullApp app=new MDFullApp();
@@ -108,53 +108,32 @@ dependencies {
 ```
 ## b、信息流
 信息流分为图文信息流和视频信息流，图文信息流分为大图（单图），三图，自定义（可以满足一定约束下自定义广告布局），视频信息流的样式暂时固定。
+### 1.信息流大图
 ```java
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import ad.sdk.mf.com.ad_sdk.R;
-import ad.sdk.mf.com.adsdk.framework.MDFullApp;
-import ad.sdk.mf.com.adsdk.utils.newtwork.NetworkUtil;
-import ad.sdk.mf.com.adsdk.view.customview.CustomViewUtil;
-import ad.sdk.mf.com.adsdk.view.dialog.DialogUtil;
-
-public class InfomationFlowActivity extends Activity {
-
-    RelativeLayout container;//装载广告视图的容器
-    MDFullApp app;//广告应用对象
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_infomation_flow);
-        try {
-            if (NetworkUtil.getNetWorkType(this) == NetworkUtil.NO_NET_WORK) {//网络不可用
-                DialogUtil.getUtil().showSimpleMessageDialog(this, "网络不可用，请检查网络", "确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                });
-                return;
-            }
-            container = findViewById(R.id.container1);
-            app = new MDFullApp();
-            //插入信息流大图
-            app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
+RelativeLayout container = findViewById(R.id.container1);
+MDFullApp app = new MDFullApp();
+app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
                         container, new MDFullApp.InformationFlowCallback() {
                             @Override
-                            public void onRequestResult(boolean success, String msg) {
-                                
+                            public void onRequestResult(boolean success, String msg) {//方法内部处于非主线程，请注意
+                                if (!success) {
+                                    InfomationFlowActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            AlertDialog dialog = new AlertDialog.Builder(InfomationFlowActivity.this).create();
+                                            dialog.setMessage("没有匹配到广告");
+                                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    finish();
+                                                }
+                                            });
+                                            dialog.setCancelable(false);
+                                            dialog.show();
+                                        }
+                                    });
+                                }
                             }
 
                             @Override
@@ -162,22 +141,16 @@ public class InfomationFlowActivity extends Activity {
 
                             }
                         });
-            /*
-            //或者插入信息流三图
-            app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_THREEIMAGE,
-                        container, new MDFullApp.InformationFlowCallback() {
-                            @Override
-                            public void onRequestResult(boolean success, String msg) {
-                                
-                            }
+```
+其中，insertAd_InformationFlow（Context context,String adType,ViewGroup container,MDFullApp.InformationFlowCallback callback）方法参数如下：参数1:上下文对象，参数2:广告类型，参数3:广告视图的容器，参数4:广告请求回调
+广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果。
 
-                            @Override
-                            public void onAttachResult(boolean success, String msg) {
+### 2.信息流三图
+信息流三图和大图类似。
 
-                            }
-                        });
-            //或者自定义图文
-            ViewGroup parent = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.layout_custom_ad, null);
+### 3.自定义图文信息流
+```java
+ViewGroup parent = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.layout_custom_ad, null);
                 container.addView(parent);//请保证广告视图可见
                 TextView title = parent.findViewById(R.id.title);
                 TextView desc = parent.findViewById(R.id.desc);
@@ -187,22 +160,34 @@ public class InfomationFlowActivity extends Activity {
                 new CustomViewUtil().insertCustom(this, new CustomViewUtil.CustomCallback() {
                     @Override
                     public void onResult(boolean success, String msg) {
-                        
+                        if (!success) {
+                            InfomationFlowActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //移除视图
+                                    container.removeAllViews();
+
+                                    AlertDialog dialog = new AlertDialog.Builder(InfomationFlowActivity.this).create();
+                                    dialog.setMessage("没有匹配到广告");
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            finish();
+                                        }
+                                    });
+                                    dialog.setCancelable(false);
+                                    dialog.show();
+                                }
+                            });
+                        }
                     }
                 }, title, desc, img, adFlag, parent);
-            */
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-}
 ```
-其中，insertAd_InformationFlow（Context context,String adType,ViewGroup container,MDFullApp.InformationFlowCallback callback）方法参数如下：参数1:上下文对象，参数2:广告类型，参数3:广告视图的容器，参数4:广告请求回调
-广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果
+自定义图文信息流需要满足一些条件：1.传入的view参数必须完整，否则无法广告计费，2.广告规定必须有一个广告标识符（这里传入的是TextView类型的adFlag）。3.所有传入的view必须保证可见（也即跟视图为decorview），否则无法广告计费。
 
 ### 7、视频信息流
-视频信息流需要在activity生命周期中控制播放器的回收
+视频信息流需要在activity生命周期中控制播放器的回收，下面给出一个例子
 ```java
 import android.app.Activity;
 import android.app.AlertDialog;
