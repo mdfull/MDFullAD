@@ -75,7 +75,7 @@ dependencies {
     }
 ```
 ### 3、基本使用方法
-在请求广告前注册app,参数1:存放SpaceId的map，参数2:选择运行环境（测试|线上）
+在请求广告前注册app,参数1:上下文对象，参数2:存放广告位ID的SpaceId对象表。
 ```java
     Map<String,SpaceId> map=new HashMap<>();//声明一个map存放广告位id
     //把申请到的广告位id放进去
@@ -152,7 +152,7 @@ app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
                         });
 ```
 其中，insertAd_InformationFlow（Context context,String adType,ViewGroup container,MDFullApp.InformationFlowCallback callback）方法参数如下：参数1:上下文对象，参数2:广告类型，参数3:广告视图的容器，参数4:广告请求回调
-广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果。
+广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果(暂时没有回调)。
 
 ### 2.信息流三图
 信息流三图和大图类似。将app.insertAd_InformationFlow方法的第二个参数替换为MDFullApp.TYPE_INFORMATIONFLOW_THREEIMAGE即可。
@@ -200,7 +200,7 @@ ViewGroup parent = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.layout
                     }
                 }, title, desc, img, adFlag, parent);
 ```
-自定义图文信息流需要满足一些条件：1.传入的view参数必须完整，否则无法广告计费，2.广告规定必须有一个广告标识符（这里传入的是TextView类型的adFlag）。3.所有传入的view必须保证可见（也即跟视图为decorview），否则无法广告计费。
+自定义图文信息流需要满足一些条件：1.传入的view参数必须完整，否则无法广告计费，2.广告规定必须有一个广告标识符（这里传入的是TextView类型的adFlag）。3.所有传入的view必须保证可见（也即根视图为decorview），否则无法广告计费。
 
 ### 7、视频信息流
 视频信息流需要在activity生命周期中控制播放器的回收，下面给出一个例子
