@@ -155,7 +155,7 @@ app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
 广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果。
 
 ### 2.信息流三图
-信息流三图和大图类似。
+信息流三图和大图类似。将app.insertAd_InformationFlow方法的第二个参数替换为MDFullApp.TYPE_INFORMATIONFLOW_THREEIMAGE即可。
 
 ### 3.自定义图文信息流
 导包（给出了sdk的包，系统的包默认AndroidStudio里面使用Alt+Enter导入）
