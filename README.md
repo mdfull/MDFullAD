@@ -112,6 +112,12 @@ dependencies {
 ## b、信息流
 信息流分为图文信息流和视频信息流，图文信息流分为大图（单图），三图，自定义（可以满足一定约束下自定义广告布局），视频信息流的样式暂时固定。
 ### 1.信息流大图
+导包（给出了sdk的包，系统的包默认AndroidStudio里面使用Alt+Enter导入）
+```java
+import mf.com.adsdk_demo.framework.MDFullApp;
+import mf.com.adsdk_demo.utils.network.NetworkUtil;
+```
+使用
 ```java
 RelativeLayout container = findViewById(R.id.container1);
 MDFullApp app = new MDFullApp();
@@ -152,6 +158,13 @@ app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
 信息流三图和大图类似。
 
 ### 3.自定义图文信息流
+导包（给出了sdk的包，系统的包默认AndroidStudio里面使用Alt+Enter导入）
+```java
+import mf.com.adsdk_demo.framework.MDFullApp;
+import mf.com.adsdk_demo.utils.network.NetworkUtil;
+import mf.com.adsdk_demo.view.customview.CustomViewUtil;
+```
+使用
 ```java
 ViewGroup parent = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.layout_custom_ad, null);
                 container.addView(parent);//请保证广告视图可见
@@ -199,12 +212,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import ad.sdk.mf.com.ad_sdk.R;
-import ad.sdk.mf.com.adsdk.framework.MDFullApp;
-import ad.sdk.mf.com.adsdk.utils.newtwork.NetworkUtil;
-import ad.sdk.mf.com.adsdk.view.dialog.DialogUtil;
-import ad.sdk.mf.com.adsdk.view.video.AdVideoViewPlayer;
-import ad.sdk.mf.com.adsdk.view.video.VideoView;
+import mf.com.adsdk_demo.framework.MDFullApp;
+import mf.com.adsdk_demo.utils.network.NetworkUtil;
+import mf.com.adsdk_demo.view.video.AdVideoViewPlayer;
+import mf.com.adsdk_demo.view.video.VideoView;
+import mf.com.mdfullad_try_demo.R;
 
 public class MobileInfomationFlowDemoActivity extends Activity{
 
