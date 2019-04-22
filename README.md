@@ -81,7 +81,7 @@ dependencies {
 在请求广告前注册app,参数1:上下文对象，参数2:存放广告位ID的SpaceId对象表。
 ```java
     Map<String,SpaceId> map=new HashMap<>();//声明一个map存放广告位id
-    //把申请到的广告位id放进去
+    //把申请到的广告位id放进去，媒体需要向米赋相关人员获取获取各种类型广告位的ID
     map.put(Constant.静态图开屏广告,new SpaceId(MDFullADConstant.静态图开屏广告,"你申请到的静态图开屏广告位id"));
     map.put(Constant.动态图开屏广告,new SpaceId(MDFullADConstant.动态图开屏广告,"你申请到的动态图开屏广告位id"));
     map.put(Constant.视频开屏广告,new SpaceId(MDFullADConstant.视频开屏广告,"你申请到的视频开屏广告位id"));
