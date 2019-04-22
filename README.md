@@ -26,6 +26,8 @@ dependencies {
 -keep class mf.com.adsdk_demo.**
 ```
 
+请求广告时可能出现网络不通的问题，在manifest文件application节点上添加属性android:usesCleartextTraffic="true"
+
 ## 二、使用
 ### 1、添加权限
 在manifest文件中添加必要权限
@@ -63,6 +65,7 @@ dependencies {
             @Override
             public void onResult(int requestCode) {
                 System.out.println("权限申请成功");
+                //有权限后才能执行下一步
             }
         });
 ```
@@ -79,13 +82,13 @@ dependencies {
 ```java
     Map<String,SpaceId> map=new HashMap<>();//声明一个map存放广告位id
     //把申请到的广告位id放进去
-    map.put(Constant.静态图开屏广告,new SpaceId(Constant.静态图开屏广告,"你申请到的静态图开屏广告位id"));
-    map.put(Constant.动态图开屏广告,new SpaceId(Constant.动态图开屏广告,"你申请到的动态图开屏广告位id"));
-    map.put(Constant.视频开屏广告,new SpaceId(Constant.视频开屏广告,"你申请到的视频开屏广告位id"));
-    map.put(Constant.信息流大图广告,new SpaceId(Constant.信息流大图广告,"你申请到的信息流大图广告位id"));
-    map.put(Constant.信息流三图广告,new SpaceId(Constant.信息流三图广告,"你申请到的信息流三图广告位id"));
-    map.put(Constant.图文信息流广告,new SpaceId(Constant.图文信息流广告,"你申请到的图文信息流广告位id"));
-    map.put(Constant.视频信息流广告,new SpaceId(Constant.视频信息流广告,"你申请到的视频信息流广告位id"));
+    map.put(Constant.静态图开屏广告,new SpaceId(MDFullADConstant.静态图开屏广告,"你申请到的静态图开屏广告位id"));
+    map.put(Constant.动态图开屏广告,new SpaceId(MDFullADConstant.动态图开屏广告,"你申请到的动态图开屏广告位id"));
+    map.put(Constant.视频开屏广告,new SpaceId(MDFullADConstant.视频开屏广告,"你申请到的视频开屏广告位id"));
+    map.put(Constant.信息流大图广告,new SpaceId(MDFullADConstant.信息流大图广告,"你申请到的信息流大图广告位id"));
+    map.put(Constant.信息流三图广告,new SpaceId(MDFullADConstant.信息流三图广告,"你申请到的信息流三图广告位id"));
+    map.put(Constant.图文信息流广告,new SpaceId(MDFullADConstant.图文信息流广告,"你申请到的图文信息流广告位id"));
+    map.put(Constant.视频信息流广告,new SpaceId(MDFullADConstant.视频信息流广告,"你申请到的视频信息流广告位id"));
     //通过广告位id注册
     MDFullApp.register(context,map);//注册
 ```
@@ -95,19 +98,22 @@ dependencies {
 开屏广告由sdk托管，直接调用提供的方法跳转，可以在主界面还未设置数据时直接跳转。开屏广告目前包括：静态图开屏，动态图开屏，视频开屏
 ### 1、静态开屏广告
 ```java
-    MDFullApp app=new MDFullApp();
-    app.gotoAd_Splash_Jpg(this,R.drawable.logo);//跳转到静态图开屏
+    MDFullApp app=new MDFullApp(MainActivity.this);
+    //参数1:上下文  参数2:默认显示的logo图  参数3:默认在logo图停留的时间毫秒数
+    app.gotoAd_Splash_Jpg(MainActivity.this,R.drawable.logo_page,1000);//跳转到静态图开屏
 ```
 其中，R.drawable.logo事你传入的logo页图片。因为开屏需要加载素材时间，为了防止空白期，默认需要一张首页logo图片（下同）
 ### 2、动态开屏广告
 ```java
-    MDFullApp app=new MDFullApp();
-    app.gotoAd_Splash_Gif(this,R.drawable.logo);//跳转到动态图开屏
+    MDFullApp app=new MDFullApp(MainActivity.this);
+    //参数1:上下文  参数2:默认显示的logo图  参数3:默认在logo图停留的时间毫秒数
+    app.gotoAd_Splash_Gif(MainActivity.this,R.drawable.logo_page,1000);//跳转到动态图开屏
 ```
 ### 3、视频开屏广告
 ```java
-    MDFullApp app=new MDFullApp();
-    app.gotoAd_Splash_Video(this,R.drawable.logo);//跳转到视频开屏
+    MDFullApp app=new MDFullApp(MainActivity.this);
+    //参数1:上下文  参数2:默认显示的logo图  参数3:默认在logo图停留的时间毫秒数
+    app.gotoAd_Splash_Video(MainActivity.this,R.drawable.logo_page,1000);//跳转到视频开屏
 ```
 ## b、信息流
 信息流分为图文信息流和视频信息流，图文信息流分为大图（单图），三图，自定义（可以满足一定约束下自定义广告布局），视频信息流的样式暂时固定。
@@ -119,37 +125,38 @@ import mf.com.adsdk_demo.utils.network.NetworkUtil;
 ```
 使用
 ```java
-RelativeLayout container = findViewById(R.id.container1);
-MDFullApp app = new MDFullApp();
-app.insertAd_InformationFlow(this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
-                        container, new MDFullApp.InformationFlowCallback() {
-                            @Override
-                            public void onRequestResult(boolean success, String msg) {//方法内部处于非主线程，请注意
-                                if (!success) {
-                                    InfomationFlowActivity.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            AlertDialog dialog = new AlertDialog.Builder(InfomationFlowActivity.this).create();
-                                            dialog.setMessage("没有匹配到广告");
-                                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                    finish();
-                                                }
-                                            });
-                                            dialog.setCancelable(false);
-                                            dialog.show();
-                                        }
-                                    });
+RelativeLayout container = findViewById(R.id.container);
+MDFullApp app = new MDFullApp(MainActivity.this);
+//参数：1.上下文  2.信息流类型  3.容器  4.信息流回调
+app.insertAd_InformationFlow(MainActivity.this, MDFullApp.TYPE_INFORMATIONFLOW_BIGIMAGE,
+        container, new MDFullApp.InformationFlowCallback() {
+            @Override
+            public void onRequestResult(boolean success, String msg) {//方法内部处于非主线程，请注意
+                if (!success) {
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+                            dialog.setMessage("没有匹配到广告");
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    finish();
                                 }
-                            }
+                            });
+                            dialog.setCancelable(false);
+                            dialog.show();
+                        }
+                    });
+                }
+            }
 
-                            @Override
-                            public void onAttachResult(boolean success, String msg) {
+            @Override
+            public void onAttachResult(boolean success, String msg) {
 
-                            }
-                        });
+            }
+        });
 ```
 其中，insertAd_InformationFlow（Context context,String adType,ViewGroup container,MDFullApp.InformationFlowCallback callback）方法参数如下：参数1:上下文对象，参数2:广告类型，参数3:广告视图的容器，参数4:广告请求回调
 广告回调中，public void onRequestResult(boolean success, String msg)返回数据获取结果字符窜，public void onAttachResult(boolean success, String msg)返回广告attach在container上的结果(暂时没有回调)。
@@ -166,39 +173,39 @@ import mf.com.adsdk_demo.view.customview.CustomViewUtil;
 ```
 使用
 ```java
-ViewGroup parent = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.layout_custom_ad, null);
-                container.addView(parent);//请保证广告视图可见
-                TextView title = parent.findViewById(R.id.title);
-                TextView desc = parent.findViewById(R.id.desc);
-                TextView adFlag = parent.findViewById(R.id.adflag);
-                ImageView img = parent.findViewById(R.id.img);
-                //自定义广告
-                new CustomViewUtil().insertCustom(this, new CustomViewUtil.CustomCallback() {
-                    @Override
-                    public void onResult(boolean success, String msg) {
-                        if (!success) {
-                            InfomationFlowActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //移除视图
-                                    container.removeAllViews();
-
-                                    AlertDialog dialog = new AlertDialog.Builder(InfomationFlowActivity.this).create();
-                                    dialog.setMessage("没有匹配到广告");
-                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            finish();
-                                        }
-                                    });
-                                    dialog.setCancelable(false);
-                                    dialog.show();
-                                }
-                            });
+final RelativeLayout container=findViewById(R.id.container);
+ViewGroup parent = (ViewGroup) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_custom_ad, null);
+container.addView(parent);//请保证广告视图可见
+TextView title = parent.findViewById(R.id.title);
+TextView desc = parent.findViewById(R.id.desc);
+TextView adFlag = parent.findViewById(R.id.adflag);
+ImageView img = parent.findViewById(R.id.img);
+//自定义广告
+//参数：1.上下文  2.信息流回调
+new CustomViewUtil().insertCustom(MainActivity.this, new CustomViewUtil.CustomCallback() {
+    @Override
+    public void onResult(boolean success, String msg) {
+        if (!success) {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    //移除视图
+                    container.removeAllViews();
+                    AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+                    dialog.setMessage("没有匹配到广告");
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
-                    }
-                }, title, desc, img, adFlag, parent);
+                    });
+                    dialog.setCancelable(false);
+                    dialog.show();
+                }
+            });
+        }
+    }
+}, title, desc, img, adFlag, parent);
 ```
 自定义图文信息流需要满足一些条件：1.传入的view参数必须完整，否则无法广告计费，2.广告规定必须有一个广告标识符（这里传入的是TextView类型的adFlag）。3.所有传入的view必须保证可见（也即根视图为decorview），否则无法广告计费。
 
@@ -232,113 +239,96 @@ public class MobileInfomationFlowDemoActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mobile_infomation_flow_demo);
-        try {
-            if (!NetworkUtil.isNetWorkAvailable(this)) {//网络不可用
-                AlertDialog dialog = new AlertDialog.Builder(MobileInfomationFlowDemoActivity.this).create();
-                dialog.setMessage("没有匹配到广告");
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+        container = findViewById(R.id.container);
+        app = new MDFullApp(MainActivity.this);
+        //创建播放器
+        player=new AdVideoViewPlayer(MainActivity.this, NetworkUtil.isWiFiConnected(MainActivity.this),
+                ViewGroup.LayoutParams.MATCH_PARENT, new VideoView.OnPlayerStateListener() {
+            @Override
+            public void onBeforeInitial() {//还没有初始化的时候
+                isPlayClick=true;//点击了播放按钮
+            }
+
+            @Override
+            public void onVideoInitializes() {//初始化结束的时候
+                canExit=true;
+                isInitialized=true;
+            }
+
+            @Override
+            public void onVideoStart() {//开始播放的时候
+
+            }
+
+            @Override
+            public void onVideoProgressChange(int progress) {//播放进度改变
+
+            }
+
+            @Override
+            public void onVideoPause() {//视频暂停
+
+            }
+
+            @Override
+            public void onVideoResume() {//视频激活
+
+            }
+
+            @Override
+            public void onVideoStop() {//视频结束退出
+
+            }
+
+            @Override
+            public void onVideoCompletion() {//视频播放完
+
+            }
+
+            @Override
+            public void onVideoError(String msg) {//视频出错
+
+            }
+
+            @Override
+            public void onVideoInfo(String msg) {//视频信息输出
+
+            }
+        });
+        //插入视频广告
+        参数：1.上下文  2.容器  3.播放器  4.信息流回调
+        app.insertAd_Mobile_InformationFlow(MainActivity.this, container, player,
+                new MDFullApp.MobileInformationFlowCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
+                    public void onRequestResult(boolean success, String msg) {
+                        if(!success){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //移除视图
+                                    player.deAttach();
+
+                                    AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
+                                    dialog.setMessage("没有匹配到广告");
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            finish();
+                                        }
+                                    });
+                                    dialog.setCancelable(false);
+                                    dialog.show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onAttachResult(boolean success, String msg) {
+
                     }
                 });
-                dialog.setCancelable(false);
-                dialog.show();
-                return;
-            }
-            container = findViewById(R.id.container);
-            app = new MDFullApp();
-            //创建播放器
-            player=new AdVideoViewPlayer(this, NetworkUtil.isWiFiConnected(this),
-                    ViewGroup.LayoutParams.MATCH_PARENT, new VideoView.OnPlayerStateListener() {
-                @Override
-                public void onBeforeInitial() {//还没有初始化的时候
-                    isPlayClick=true;//点击了播放按钮
-                }
-
-                @Override
-                public void onVideoInitializes() {//初始化结束的时候
-                    canExit=true;
-                    isInitialized=true;
-                }
-
-                @Override
-                public void onVideoStart() {//开始播放的时候
-
-                }
-
-                @Override
-                public void onVideoProgressChange(int progress) {//播放进度改变
-
-                }
-
-                @Override
-                public void onVideoPause() {//视频暂停
-
-                }
-
-                @Override
-                public void onVideoResume() {//视频激活
-
-                }
-
-                @Override
-                public void onVideoStop() {//视频结束退出
-
-                }
-
-                @Override
-                public void onVideoCompletion() {//视频播放完
-
-                }
-
-                @Override
-                public void onVideoError(String msg) {//视频出错
-
-                }
-
-                @Override
-                public void onVideoInfo(String msg) {//视频信息输出
-
-                }
-            });
-            //插入视频广告
-            app.insertAd_Mobile_InformationFlow(this, container, player,
-                    new MDFullApp.MobileInformationFlowCallback() {
-                @Override
-                public void onRequestResult(boolean success, String msg) {
-                    if(!success){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //移除视图
-                                player.deAttach();
-
-                                AlertDialog dialog = new AlertDialog.Builder(MobileInfomationFlowDemoActivity.this).create();
-                                dialog.setMessage("没有匹配到广告");
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "返回", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        finish();
-                                    }
-                                });
-                                dialog.setCancelable(false);
-                                dialog.show();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onAttachResult(boolean success, String msg) {
-
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -352,15 +342,31 @@ public class MobileInfomationFlowDemoActivity extends Activity{
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isFirstPlay) {
+            Log.e("onResume","不是第一次播放");
+            if(player!=null) {
+                player.resume();
+            }
+        }
+        isFirstPlay=false;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        player.close();
+        if(player!=null) {
+            player.close();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        player.close();
+        if(player!=null) {
+            player.close();
+        }
     }
 
     @Override
@@ -376,3 +382,8 @@ public class MobileInfomationFlowDemoActivity extends Activity{
 
 ## 四、数据返回
 请求广告可能返回204（没有匹配到广告），因为广告生成服务器会决定是否返回广告。因此对于自定义图文广告，应该判断在没有返回广告时，容器的移除或隐藏处理（防止占用空间）
+
+## 五、发布版本建议隐藏sdk内部输出，以免无法通过应用市场审核。
+```java
+MDFullADConstant.debug=false;//禁止内部日志输出
+```
